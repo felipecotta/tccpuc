@@ -3,6 +3,7 @@ package br.com.tccapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import br.com.tccapp.service.ClienteService;
 import br.com.tccapp.util.PerfilEnum;
 import br.com.tccapp.util.Resposta;
 import br.com.tccapp.util.TipoErroEnum;
+import br.com.tccapp.util.UtilitarioSenha;
 
 @RestController
 @RequestMapping("/cliente")
@@ -61,6 +63,10 @@ public class ClienteController {
 				resp.getMsgErro().add("O campo Senha deve ser preenchido");
 //***************************************************************************************************			
 			if (resp.getMsgErro().isEmpty()) {
+				
+				String password=cli.getSenha();
+				cli.setSenha(UtilitarioSenha.generateHash(password));
+				
 				service.salvar(cli);	
 			}else {
 				resp.setResultadoOperacao(TipoErroEnum.ALERTA.getTipoErro());
@@ -74,5 +80,18 @@ public class ClienteController {
 		
 		return resp;
 	}
+	
+	/*
+	  @Test
+	public void testValidIfPasswordIsValidAfterHashed(){
+		String password="brazil";
+		 String hashPassword =GenerateHashPasswordUtil.generateHash(password);
+ boolean expectedValidPassword = GenerateHashPasswordUtil.isPasswordValid(password, hashPassword);
+		assertTrue(expectedValidPassword);
+	}
+	 
+	  
+	 * 
+	 */
 	
 }
