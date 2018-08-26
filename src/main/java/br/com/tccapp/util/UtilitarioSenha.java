@@ -17,10 +17,15 @@ public abstract class UtilitarioSenha {
 		return digestPasswordEncoder;
 	}
 
-	// método que faz a validação como não usamos salt deixei em null
-	public static boolean isPasswordValid(String password, String hashPassword) {
-		MessageDigestPasswordEncoder digestPasswordEncoder = getInstanceMessageDisterPassword();
-		return digestPasswordEncoder.isPasswordValid(hashPassword, password, salt);
+	
+	public static boolean isPasswordValid(String passwordSistema, String password) {
+	
+		String senhaHash = UtilitarioSenha.generateHash(password);
+	
+		if (passwordSistema.equals(senhaHash))
+			return true;
+		else
+			return false;
 	}
 
 }

@@ -1,9 +1,10 @@
 package br.com.tccapp.controller;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -81,17 +82,46 @@ public class ClienteController {
 		return resp;
 	}
 	
-	/*
-	  @Test
-	public void testValidIfPasswordIsValidAfterHashed(){
-		String password="brazil";
-		 String hashPassword =GenerateHashPasswordUtil.generateHash(password);
- boolean expectedValidPassword = GenerateHashPasswordUtil.isPasswordValid(password, hashPassword);
-		assertTrue(expectedValidPassword);
+	
+	@ResponseStatus(HttpStatus.OK)//@ResponseBody
+	@RequestMapping(value = "validaCliente", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)  
+	public HashMap<String, Object>  validaCliente(@RequestBody Cliente cliente) {
+		Cliente cliBanco = new Cliente();
+		Resposta resp = new Resposta();
+		HashMap<String, Object> retorno = new HashMap<>();
+		
+		
+		if(cliente.getCpf() != 0L )
+			cliBanco = service.buscarClienteCpf(cliente);
+		else
+			cliBanco = service.buscarCliente(cliente.getEmail());	
+		
+		if (cliBanco != null) {
+			
+			boolean retIgual = UtilitarioSenha.isPasswordValid(cliBanco.getSenha(), cliente.getSenha());
+			
+			if(retIgual) {
+				cliBanco.setSenha("#");
+			
+				retorno.put("resultado", resp);
+				retorno.put("cliente", cliBanco);
+			}else {
+				resp.getMsgErro().add("Usuário ou Senha incorretos");
+				resp.setResultadoOperacao(TipoErroEnum.ALERTA.getTipoErro());
+				
+				retorno.put("resultado",resp);
+				retorno.put("cliente",null);
+			}
+		}else {
+			resp.getMsgErro().add("Usuário não Cadastrado no Sistema");
+			resp.setResultadoOperacao(TipoErroEnum.ALERTA.getTipoErro());
+			
+			retorno.put("resultado",resp);
+			retorno.put("cliente",null);
+		}
+		
+		return retorno;
 	}
-	 
-	  
-	 * 
-	 */
+	
 	
 }
