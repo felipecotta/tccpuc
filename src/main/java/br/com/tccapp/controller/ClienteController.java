@@ -42,8 +42,9 @@ public class ClienteController {
 	
 	@ResponseStatus(HttpStatus.OK)//@ResponseBody
 	@RequestMapping(value = "salvar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)  
-	public Resposta salvar(@RequestBody Cliente cliente , Model model) {
+	public HashMap<String, Object>  salvar(@RequestBody Cliente cliente , Model model) {
 		
+		HashMap<String, Object> retorno = new HashMap<>();
 		Resposta resp = new Resposta();
 		
 		try {
@@ -78,8 +79,9 @@ public class ClienteController {
 			resp.getMsgErro().add(e.getMessage());
 		}
 		
+		retorno.put("resultado", resp);
 		
-		return resp;
+		return retorno;
 	}
 	
 	
@@ -102,7 +104,6 @@ public class ClienteController {
 			
 			if(retIgual) {
 				cliBanco.setSenha("#");
-			
 				retorno.put("resultado", resp);
 				retorno.put("cliente", cliBanco);
 			}else {
