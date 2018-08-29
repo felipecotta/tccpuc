@@ -35,6 +35,15 @@ public class ClienteController {
 	}
 	
 	@ResponseStatus(HttpStatus.OK) 
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value="verificarEmailJ")
+	public Cliente verificaEmailJ(@RequestBody Cliente cliente) {
+		 Cliente cli;
+		 cli = service.buscarCliente(cliente.getEmail());
+		 return cli;
+	}
+	
+	
+	@ResponseStatus(HttpStatus.OK) 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, value="verificarCpf")
 	public Cliente verificarCpf(@RequestBody Cliente cliente) {
 		 return service.buscarClienteCpf(cliente);
