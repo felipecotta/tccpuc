@@ -41,8 +41,6 @@ public class MunicipioService {
 			resultado.add(item.getMunicipio());
 		}
 		
-		
-		
 		return resultado;
 	}
 }
