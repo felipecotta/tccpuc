@@ -120,14 +120,14 @@ public class ClienteController {
 				resp.setResultadoOperacao(TipoErroEnum.ALERTA.getTipoErro());
 				
 				retorno.put("resultado",resp);
-				retorno.put("cliente",null);
+				retorno.put("cliente",new Cliente());
 			}
 		}else {
 			resp.getMsgErro().add("Usuário não Cadastrado no Sistema");
 			resp.setResultadoOperacao(TipoErroEnum.ALERTA.getTipoErro());
 			
 			retorno.put("resultado",resp);
-			retorno.put("cliente",null);
+			retorno.put("cliente",new Cliente());
 		}
 		
 		return retorno;

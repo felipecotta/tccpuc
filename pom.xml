@@ -99,6 +99,11 @@
 		    <version>3.0.2.RELEASE</version>
 		</dependency>
 		
+		<dependency>
+		    <groupId>com.google.appengine</groupId>
+		    <artifactId>appengine-api-1.0-sdk</artifactId>
+		    <version>1.9.53</version>
+		</dependency>
 		
 	</dependencies>
 
