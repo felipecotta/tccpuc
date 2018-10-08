@@ -15,10 +15,11 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository repository ;
 	
-	 @Autowired
-	 private  EntityManager manager;
+	@Autowired
+	private  EntityManager manager;
 	
-	
+	@Autowired
+	private PedidoService pedidoService;
 	
 	public Cliente buscarCliente(String email) {
 		
@@ -42,5 +43,12 @@ public class ClienteService {
 	
 	public void salvar(Cliente cliente) {
 		repository.save(cliente);
+	}
+	
+	public void excluir(Cliente cliente) {
+		
+		pedidoService.excluirPedido(cliente.getCpf());
+		
+		repository.delete(cliente);
 	}
 }

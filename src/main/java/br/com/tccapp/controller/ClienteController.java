@@ -133,5 +133,47 @@ public class ClienteController {
 		return retorno;
 	}
 	
-	
+	@ResponseStatus(HttpStatus.OK)//@ResponseBody
+	@RequestMapping(value = "excluir", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)  
+	public HashMap<String, Object>  excluir(@RequestBody Cliente cliente , Model model) {
+		
+		HashMap<String, Object> retorno = new HashMap<>();
+		Resposta resp = new Resposta();
+		
+		try {
+			Cliente cli = cliente;
+			cli.setPerfil(PerfilEnum.USUARIO.getPerfil());
+			
+//	********************		Validações  *********************************************************
+			if(cli.getCpf() == 0L ) 
+				resp.getMsgErro().add("CPF deve ser preenchido");
+			
+			if(cli.getEmail()== null || cli.getEmail().trim().equals("")) 
+				resp.getMsgErro().add("O email deve ser preenchido");
+			
+			if(cli.getNomeCliente() == null || cli.getNomeCliente().trim().equals(""))
+				resp.getMsgErro().add("O nome do cliente deve ser preenchido");
+			
+			if(cli.getSenha() == null || cli.getSenha().trim().equals(""))
+				resp.getMsgErro().add("O campo Senha deve ser preenchido");
+//***************************************************************************************************			
+			if (resp.getMsgErro().isEmpty()) {
+				
+				String password=cli.getSenha();
+				cli.setSenha(UtilitarioSenha.generateHash(password));
+				
+				service.excluir(cli);	
+			}else {
+				resp.setResultadoOperacao(TipoErroEnum.ALERTA.getTipoErro());
+			}
+			
+		} catch (Exception e) {
+			resp.setResultadoOperacao(TipoErroEnum.ERRO.getTipoErro());
+			resp.getMsgErro().add(e.getMessage());
+		}
+		
+		retorno.put("resultado", resp);
+		
+		return retorno;
+	}
 }
